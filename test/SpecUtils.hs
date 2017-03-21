@@ -9,12 +9,14 @@ import Test.Hspec hiding (shouldReturn, shouldThrow)
 
 infix 1 `shouldReturn`, `shouldThrow`
 
+type Err = Either String
+
 -- FIXME Call stack
-shouldReturn :: (Applicative f, Eq (f a), Show (f a)) => f a -> a -> Expectation
+shouldReturn :: (Show a, Eq a) => Err a -> a -> Expectation
 shouldReturn action expectedValue = action `shouldBe` pure expectedValue
 
 -- FIXME Call stack
-shouldThrow :: (MonadError e m, Eq (m a), Show (m a)) => m a -> e -> Expectation
+shouldThrow :: (Show a, Eq a) => Err a -> String -> Expectation
 shouldThrow action expectedError = action `shouldBe` throwError expectedError
 
 -- TODO shouldNotReturn, shouldNotThrow
